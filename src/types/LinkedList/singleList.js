@@ -4,11 +4,11 @@
 
 'use strict';
 
-let dS = require('../../dS');
+import {dS} from '../../dS';
 const PREV = Symbol('prev'); //'prev';
 const NEXT = Symbol('next'); //'next';
 
-class linkedList extends dS {
+export default class linkedList extends dS {
 
     constructor() {
         super();
@@ -181,6 +181,5 @@ class linkedList extends dS {
     }
 
 }
-module.exports = linkedList;
 
 

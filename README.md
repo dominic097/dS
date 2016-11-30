@@ -8,11 +8,11 @@
 ```bash
 	npm install ds --save-dev
 ```
-**2 Require and use :**
+**2 Import and use :**
 
 ```js	
-    var LinkedList = require('../types/linkedList'),
-    	link = new LinkedList();
+    import {LinkedList} from '../types/linkedList';
+	const link = new LinkedList();
     
     link.add(10);
     
@@ -21,6 +21,7 @@
 ### Included data structures
 
 - Linked List
+- Tree
 
 
 ### Support

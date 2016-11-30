@@ -2,7 +2,7 @@
  * Created by dominic on 21/11/16.
  */
 'use strict';
-class _default {
+export default class _default {
 
     /**
      * Default Equal cB fucntion
@@ -77,5 +77,3 @@ class _default {
 
 
 }
-
-module.exports = _default;

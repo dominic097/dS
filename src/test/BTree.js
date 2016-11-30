@@ -4,10 +4,9 @@
  */
 
 "use strict";
-var should = require("should"),
-    assert = require("assert"),
-    BTree = require('../types/Tree/BTree');
-
+import {should} from 'should';
+import {assert} from 'assert';
+import {BTree} from '../types/Tree/BTree';
 
 describe("UT for BTree", function () {
 

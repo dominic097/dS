@@ -5,6 +5,4 @@
 
 'use strict';
 
-module.exports = {
-    LinkedList: require('./src/types/LinkedList/linkedList')
-};
+export { default as LinkedList } from './src/types/LinkedList/singleList';

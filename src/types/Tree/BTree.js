@@ -4,12 +4,12 @@
 
 'use strict';
 
-let dS = require('../../dS');
+import {dS} from '../../dS';
 const LEFT = Symbol('left'); //'left';
 const RIGHT = Symbol('right'); //'right';
 
 
-class BTree extends dS {
+export default class BTree extends dS {
 
     constructor(init) {
         super();
@@ -271,5 +271,3 @@ class BTree extends dS {
 //
 // bT.search({name: lst[5]});
 // console.log(bT);
-
-module.exports = BTree;

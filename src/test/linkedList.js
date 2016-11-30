@@ -3,9 +3,9 @@
  * Unit Test Case for linkedList data Type
  */
 
-var should = require("should"),
-    assert = require("assert"),
-    LinkedList = require('../types/LinkedList/singleList');
+import {should} from 'should';
+import {assert} from 'assert';
+import {LinkedList} from '../types/LinkedList/singleList';
 
 describe("UT for linkedList", function () {
     "use strict";
