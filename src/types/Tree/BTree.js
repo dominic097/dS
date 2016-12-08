@@ -56,7 +56,7 @@ class BTree extends dS {
             let breakLoop = false,
                 _index = 0;
             while (_currentNode && !breakLoop) {
-                let cmp = this.lessThanEquals(_nodeToAdd.data, _currentNode.data);
+                let cmp = this.compare(_nodeToAdd.data, _currentNode.data);
 
                 if (cmp) {
                     if (!_currentNode[LEFT]) {
@@ -246,8 +246,17 @@ class BTree extends dS {
     };
 
 
-    delete(k) {
-        // return this._wm.delete(k)
+    delete(d) {
+
+        function traverse(d, node) {
+
+            if(this.compare(d, node)) {
+                traverse()
+            }
+        }
+
+        traverse(d, this.root);
+
     }
 
     get(d) {
