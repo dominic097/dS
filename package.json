@@ -11,7 +11,9 @@
     "ML",
     "machine learning",
     "linked list",
-    "data structure"
+    "data structure",
+    "BTree",
+    "binary bearch tree"
   ],
   "repository": {
     "type": "git",

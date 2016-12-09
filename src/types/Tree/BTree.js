@@ -7,6 +7,7 @@
 let dS = require('../../dS');
 const LEFT = Symbol('left'); //'left';
 const RIGHT = Symbol('right'); //'right';
+const PARENT = Symbol('parent'); //'parent';
 
 
 class BTree extends dS {
@@ -21,9 +22,11 @@ class BTree extends dS {
         this.visiting = null;
         this.traversing = [];
         this.length = 0;
+        this.nodePropName = _default && _default.nodePropName ? _default.nodePropName : false;
 
         //Overriding comparison callback function
         this.compare = _default && _default.compare ? _default.compare : this.lessThanEquals;
+        this.equals = _default && _default.equals ? _default.equals : this.equals;
     }
 
     /**
@@ -56,7 +59,7 @@ class BTree extends dS {
             let breakLoop = false,
                 _index = 0;
             while (_currentNode && !breakLoop) {
-                let cmp = this.compare(_nodeToAdd.data, _currentNode.data);
+                let cmp = this.compare(_nodeToAdd.data, _currentNode.data, this.nodePropName);
 
                 if (cmp) {
                     if (!_currentNode[LEFT]) {
@@ -86,19 +89,19 @@ class BTree extends dS {
      * @returns {boolean|*|{data: *}}
      */
     search(d) {
-        if (this.equals(this.root.data, d)) {
+        if (this.equals(this.root.data, d, this.nodePropName)) {
             return this.root;
         }
         else {
             let _currentNode = this.root,
                 _nodeToReturn = this.root;
             while (_currentNode) {
-                if (this.equals(_currentNode.data, d)) {
+                if (this.equals(_currentNode.data, d, this.nodePropName)) {
                     _nodeToReturn = _currentNode;
                     _currentNode = null;
                 }
                 else {
-                    let cmp = this.compare(d, _currentNode.data);
+                    let cmp = this.compare(d, _currentNode.data, this.nodePropName);
                     if (cmp)
                         _currentNode = _currentNode[LEFT];
 
@@ -134,12 +137,12 @@ class BTree extends dS {
      * Gets Node with minimum value of BTree
      * @returns {{data} | false}
      */
-    getMinimumValue() {
+    getMinimumValue(node) {
 
         if (this.isEmpty())
             return false;
 
-        var node = this.root;
+        var node = node ? node : this.root;
         while (node[LEFT] !== undefined) {
             node = node[LEFT];
         }
@@ -150,12 +153,12 @@ class BTree extends dS {
      * Gets Node with maximum value of BTree
      * @returns {{data} | false}
      */
-    getMaximumValue() {
+    getMaximumValue(node) {
 
         if (this.isEmpty())
             return false;
 
-        var node = this.root;
+        var node = node ? node : this.root;
         while (node[RIGHT] !== undefined) {
             node = node[RIGHT];
         }
@@ -250,12 +253,48 @@ class BTree extends dS {
 
         function traverse(d, node) {
 
-            if(this.compare(d, node)) {
-                traverse()
+            if (this.equals(d, node.data, this.nodePropName)) {
+                removeNode.apply(this, node);
+            }
+            if (this.compare(d, node, this.nodePropName)) {
+                node[PARENT] = node;
+                traverse.apply(this, [d, node[LEFT]]);
+            }
+            else {
+                node[PARENT] = node;
+                traverse.apply(this, [d, node[RIGHT]]);
             }
         }
 
-        traverse(d, this.root);
+        function removeNode(node) {
+
+            // case #1 if node to remove has both child's
+            if (!this.isUndefined(node[LEFT]) && !this.isUndefined(node[RIGHT])) {
+                let _successor = this.getMinimumValue(node[RIGHT]);
+                node.data = _successor.data;
+                traverse.apply(this, [_successor.data, _successor]);
+            }
+            // case #2 if node has only left child
+            else if (!this.isUndefined(node[LEFT])) {
+                if (!node[PARENT]) {
+                    this.root[LEFT] = node[LEFT];
+                }
+                else
+                    node[PARENT][LEFT] = node[LEFT];
+            }
+            // case #3 if node has only right child
+            else if (!this.isUndefined(node[RIGHT])) {
+                if (!node[PARENT]) {
+                    this.root[LEFT] = node[LEFT];
+                }
+                else
+                    node[PARENT][RIGHT] = node[RIGHT];
+            }
+
+        }
+
+
+        traverse.apply(this, [d, this.root]);
 
     }
 
@@ -273,10 +312,20 @@ class BTree extends dS {
 }
 
 // var bT = new BTree({nodePropName: 'name'});
-// var lst = [87, 45, 25, 36, 54, 85, 100, 25, 31, 34, 56, 75];
+// var lst = [87, 45, 25, 36, 54, 85, 100, 26, 31, 34, 56, 75];
 // for (var i = 0; i < 10; i++) {
 //     bT.add({name: lst[i]});
 // }
+//
+// bT.inorderTraversal(function (d) {
+//     console.log(d);
+// });
+//
+// bT.delete(31)
+//
+// bT.inorderTraversal(function (d) {
+//     console.log(d);
+// });
 //
 // bT.search({name: lst[5]});
 // console.log(bT);
