@@ -1,5 +1,6 @@
 /**
  * Created by dominic on 21/11/16.
+ * A Class of Pure Functions 
  */
 'use strict';
 class _default {
