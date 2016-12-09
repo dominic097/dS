@@ -21,7 +21,7 @@
 ### Included data structures
 
 - Linked List
-- BT Tree
+- BTree
 
 
 ### Support
