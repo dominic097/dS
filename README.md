@@ -1,4 +1,4 @@
-## dS
+# dS  [![Build Status](https://travis-ci.org/dominic097/dS.svg?branch=master)](https://travis-ci.org/dominic097/dS)
  _A Data Structure Library in JS_
  
 ### To begin
@@ -26,5 +26,3 @@
 
 ### Support
 Dominic A, [dominic097@gmail.com](mailto:dominic097@gmail.com)
-
-
