@@ -30,8 +30,10 @@ describe("UT for BTree", function () {
     });
 
     it("UT for BTree setDefaultValue", function (done) {
-       var fn = ()=>{return  2},
-        bTree_withConfig = new BTree({compare: fn});
+        var fn = ()=> {
+                return 2
+            },
+            bTree_withConfig = new BTree({compare: fn});
         bTree_withConfig.compare().should.equal(2);
         done();
     });
@@ -167,5 +169,22 @@ describe("UT for BTree", function () {
         _bTree.postorderTraversal(new Function());
         done();
     });
-    
+
+    it("UT for BTree remove", function (done) {
+        var _bTree = new BTree({nodePropName: 'name'}),
+            lst = [87, 45, 25, 36, 54, 85, 100, 26, 31, 34, 56, 75];
+
+        for (var i = 0; i < 10; i++) {
+            _bTree.add({name: lst[i]});
+        }
+
+        _bTree.delete({name: 87});
+
+        if (!_bTree.contains({name: 87}))
+            done();
+        else {
+            done("UT for BTree remove --> failed to remove node")
+        }
+    });
+
 });

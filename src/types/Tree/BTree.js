@@ -54,6 +54,7 @@ class BTree extends dS {
 
         if (!this.root) {
             this.root = _nodeToAdd;
+            this.root['_isRoot'] = true;
         }
         else {
             let breakLoop = false,
@@ -64,6 +65,7 @@ class BTree extends dS {
                 if (cmp) {
                     if (!_currentNode[LEFT]) {
                         _currentNode[LEFT] = _nodeToAdd;
+                        _nodeToAdd[PARENT] = _currentNode;
                         breakLoop = true;
                     }
                     _currentNode = _currentNode[LEFT];
@@ -71,6 +73,7 @@ class BTree extends dS {
                 else {
                     if (!_currentNode[RIGHT]) {
                         _currentNode[RIGHT] = _nodeToAdd;
+                        _nodeToAdd[PARENT] = _currentNode;
                         breakLoop = true;
                     }
                     _currentNode = _currentNode[RIGHT];
@@ -94,7 +97,7 @@ class BTree extends dS {
         }
         else {
             let _currentNode = this.root,
-                _nodeToReturn = this.root;
+                _nodeToReturn = false;
             while (_currentNode) {
                 if (this.equals(_currentNode.data, d, this.nodePropName)) {
                     _nodeToReturn = _currentNode;
@@ -122,7 +125,7 @@ class BTree extends dS {
         if (this.isUndefined(d)) {
             return false;
         }
-        return this.search(d) !== undefined;
+        return this.search(d) !== false;
     }
 
     /**
@@ -180,7 +183,7 @@ class BTree extends dS {
             if (signal.stop) {
                 return;
             }
-            signal.stop = callback(node.data) === false;
+            signal.stop = callback(node.data, node) === false;
             if (signal.stop) {
                 return;
             }
@@ -203,7 +206,7 @@ class BTree extends dS {
             if (node === undefined || signal.stop) {
                 return;
             }
-            signal.stop = callback(node.data) === false;
+            signal.stop = callback(node.data, node) === false;
             if (signal.stop) {
                 return;
             }
@@ -239,7 +242,7 @@ class BTree extends dS {
             if (signal.stop) {
                 return;
             }
-            signal.stop = callback(node.data) === false;
+            signal.stop = callback(node.data, node) === false;
         }
 
 
@@ -252,17 +255,17 @@ class BTree extends dS {
     delete(d) {
 
         function traverse(d, node) {
-
-            if (this.equals(d, node.data, this.nodePropName)) {
-                removeNode.apply(this, node);
-            }
-            if (this.compare(d, node, this.nodePropName)) {
-                node[PARENT] = node;
-                traverse.apply(this, [d, node[LEFT]]);
-            }
-            else {
-                node[PARENT] = node;
-                traverse.apply(this, [d, node[RIGHT]]);
+            if (node) {
+                if (this.equals(d, node.data, this.nodePropName)) {
+                    removeNode.apply(this, [node]);
+                }
+                if (this.compare(d, node.data, this.nodePropName)) {
+                    ;
+                    traverse.apply(this, [d, node[LEFT]]);
+                }
+                else {
+                    traverse.apply(this, [d, node[RIGHT]]);
+                }
             }
         }
 
@@ -278,17 +281,33 @@ class BTree extends dS {
             else if (!this.isUndefined(node[LEFT])) {
                 if (!node[PARENT]) {
                     this.root[LEFT] = node[LEFT];
+                    this.root["_isRoot"] = true;
                 }
-                else
+                else {
                     node[PARENT][LEFT] = node[LEFT];
+                }
             }
             // case #3 if node has only right child
             else if (!this.isUndefined(node[RIGHT])) {
                 if (!node[PARENT]) {
-                    this.root[LEFT] = node[LEFT];
+                    this.root[RIGHT] = node[RIGHT];
+                    this.root['_isRoot'] = true;
                 }
                 else
                     node[PARENT][RIGHT] = node[RIGHT];
+
+            }
+            else {
+                if(node[PARENT]) {
+                    // Node to be deleted is a left child of its parent
+                    if(this.equals(node[PARENT][LEFT], node.data, this.nodePropName)) {
+                        delete node[PARENT][LEFT];
+                    }
+                    // Node to be deleted is a right child of its parent
+                    else {
+                        delete node[PARENT][RIGHT];
+                    }
+                }
             }
 
         }
@@ -310,24 +329,5 @@ class BTree extends dS {
     }
 
 }
-
-// var bT = new BTree({nodePropName: 'name'});
-// var lst = [87, 45, 25, 36, 54, 85, 100, 26, 31, 34, 56, 75];
-// for (var i = 0; i < 10; i++) {
-//     bT.add({name: lst[i]});
-// }
-//
-// bT.inorderTraversal(function (d) {
-//     console.log(d);
-// });
-//
-// bT.delete(31)
-//
-// bT.inorderTraversal(function (d) {
-//     console.log(d);
-// });
-//
-// bT.search({name: lst[5]});
-// console.log(bT);
 
 module.exports = BTree;
