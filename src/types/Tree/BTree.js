@@ -97,7 +97,7 @@ class BTree extends dS {
         }
         else {
             let _currentNode = this.root,
-                _nodeToReturn = this.root;
+                _nodeToReturn = false;
             while (_currentNode) {
                 if (this.equals(_currentNode.data, d, this.nodePropName)) {
                     _nodeToReturn = _currentNode;
@@ -125,7 +125,7 @@ class BTree extends dS {
         if (this.isUndefined(d)) {
             return false;
         }
-        return this.search(d) !== undefined;
+        return this.search(d) !== false;
     }
 
     /**
@@ -329,3 +329,5 @@ class BTree extends dS {
     }
 
 }
+
+module.exports = BTree;
